@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="description"
+            content="Towards Accurate Phonetic Error Detection Through Phoneme Similarity Modeling">
+    <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Towards Accurate Phonetic Error Detection Through Phoneme Similarity Modeling</title>
+    
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="helper-v2.js" defer=""></script>
+
+    <style>
+        /* body {
+            background: linear-gradient(to right, #f8f9fa, #e0f7fa);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        } */
+
+        /* h1,
+        h2 {
+            font-family: 'Georgia', serif;
+            color: #007bff;
+        } */
+
+        td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 16px;
+            font-size: 16px;
+        }
+
+        audio {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .timestamp-label {
+            color: gray;
+        }
+
+        table.wide-audio audio {
+            width: 40vw;
+            max-width: 40vw;
+        }
+
+        tr:not(:first-child) {
+            border-top: 1px solid lightgrey;
+        }
+
+        /* .container {
+            background: #ffffff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        } */
+
+        /* .container h1,
+        .container h2 {
+            margin-top: 20px;
+        } */
+
+        /* .pagination .page-link {
+            color: #007bff;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .page-link:hover {
+            background-color: #e9ecef;
+        } */
+/* 
+        .fade-in {
+            animation: fadeIn 2s;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        } */
+
+        /* .shadow-card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .shadow-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        } */
+
+        th {
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 16px;
+            font-size: 18px;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+            background-color: #d1ecf1;
+        }
+
+        .header-text {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .instruction {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .reference-text {
+            font-size: 12px;
+            color: #495057;
+        }
+        /* .figure-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .figure-container img {
+            max-width: 100%;
+            height: auto;
+        } */
+
+        table {
+            width: 100%;  
+            table-layout: fixed;
+        }
+
+        th, td {
+            width: 25%;
+        }
+
+        /* @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        } */
+    </style>
+
+</head>
+<body>
+
+<section class="hero">
+    <div class="hero-body" style="padding-bottom: 0rem;">
+    <div class="container is-max-desktop">
+        <div class="columns is-centered">
+        <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Towards Accurate Phonetic Error Detection <br>through Phoneme Similarity Modeling</h1>
+
+            <div class="column has-text-centered">
+            <div class="publication-links">
+                <!-- Code Link. -->
+                <span class="link-block">
+                <a href="https://github.com/eureka235/phonetic-error-detection"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                    </a>
+                </span>
+                <!-- Dataset Link. -->
+                <span class="link-block">
+                <a href="https://drive.google.com/drive/folders/1l3TTGnWMGRq7cMiioPcRE0rDjx-dcQ9l?usp=sharing"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="far fa-images"></i>
+                    </span>
+                    <span>Data</span>
+                    </a>
+                </span>
+            </div>
+
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="container is-max-desktop">
+      <!-- Analogy. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Demo</h2>
+          <div class="content has-text-justified">
+            <img src="./static/images/demo.jpg" alt="Description of image" width="550" style="display: block; margin: 0 auto;" />
+            <p>
+              Model transcribes user speech into phoneme sequences, detects errors, scores using metrics, and generates articulator visualizations and feedback: relax the tongue and place it against the roof of the mouth, with the tip lightly touching the teeth.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Analogy. -->
+    </div>
+  </section>
+
+
+<section class="section">
+<div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+    <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+        <p>
+          Phonetic error detection, as a core subtask of automatic pronunciation assessment, aims to identify pronunciation deviations at the fine-grained phoneme level. However, variability in both speech production and perception, including accents, and dysfluencies, presents a significant challenge for phoneme recognition. Current models are unable to capture these discrepancies effectively. In this work, we propose a framework for verbatim phoneme recognition, employing multi-task training with a novel phoneme similarity modeling. Unlike most previous studies that focus on transcribing what the person is supposed to say, our method aims to transcribe what the person actually said. We develop a simulated dataset VCTK-accent contains phonetic errors, which is open-sourced, and propose two novel metrics for assessing pronunciation differences. Our work provides a new benchmark for the phonetic error detection task.
+        </p>
+        </div>
+    </div>
+    </div>
+    <!--/ Abstract. -->
+</div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- phoneme similarity modeling. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Phoneme Similarity Modeling</h2>
+        <div class="content has-text-justified">
+          <img src="./static/images/phn-modeling.jpg" alt="Description of image" width="1300" style="display: block; margin: 0 auto;" />
+          <p>
+            We propose three methods for phoneme similarity modeling: the heuristic-based method stems from the perspective of phoneme classification and definition. Both the articulatory and Sylber-based methods are data-driven approaches: the former emphasizes the acoustic aspect, while the latter focuses more on the syllabic aspect.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ phoneme similarity modeling. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Verbatim Phoneme Recognition</h2>
+        <!-- <h3 class="title is-3" style="font-size: 1.5rem;">VCTK-accent</h3>
+        <p>
+          The TTS-based simulated datasets we proposed in this work, extended from VCTK corpus, which contains vowel and consonant phonetic errors. The total duration of the dataset is 323.9 hours.
+        </p> -->
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-3" style="font-size: 1.5rem;">VCTK-accent</h3>
+        <p>
+          The TTS-based simulated datasets we proposed in this work, extended from VCTK corpus, which contains vowel and consonant phonetic errors.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded container-1">
+  <div class="flex-container">
+    <div class="table-responsive pt-1">
+      <table class="table-pagination pt-1 shadow-card" id="rich-captions-1">
+          <thead>
+              <tr>
+                  <th>Audio</th>
+                  <th>Gound Truth</th>
+                  <th>Model Transcription</th>
+                  <th>Scores</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td><audio controls="" controlslist="nodownload" class="px-1">
+                          <source src="./static/audio/049_3658_v.wav" type="audio/wav">Your browser does not support the audio element.
+                      </audio></td>
+                  <td>Historical
+                      <br>HH IH S T [AO->EY] R IH K AH L</td>
+                  <td>HH IH S T EY R IH K AH L</td>
+                  <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+              </tr>
+              <tr>
+                <td><audio controls="" controlslist="nodownload" class="px-1">
+                        <source src="./static/audio/036_5879_v.wav" type="audio/wav">Your browser does not support the audio element.
+                    </audio></td>
+                <td>Suspended
+                    <br>S [AH->IY] S P EH N D IH D</td>
+                <td>S IY S P EH N D IH D</td>
+                <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/044_1303_v.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Suspension
+                  <br>S AH S P EH N SH [AH->IY] N</td>
+              <td>S AH S P EH N SH IY N</td>
+              <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/073_2434_v.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Conflict
+                  <br>K [AA->IH] N F L IH K T</td>
+              <td>K IH N F L IH K T</td>
+              <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/048_2455_v.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Consistent
+                  <br>K AH N S IH S T [AH->IY] N T</td>
+              <td>K AH N S IH S T IY N T</td>
+              <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/076_1125_c.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Rooms
+                  <br>R UW M [Z->DH]</td>
+              <td>R UW M DH</td>
+              <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/009_3516_c.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Graves
+                  <br>[G->P] R EY IH V Z</td>
+              <td>P R EY IH V Z</td>
+              <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/048_2673_c.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Defences
+                  <br>[D->R] IH F EH N S IH Z</td>
+              <td>R IH F EH N S IH Z</td>
+              <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/098_5167_c.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Removed
+                  <br>[R->D] IH M UW V D</td>
+              <td>D IH M UW V D</td>
+              <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/063_1779_c.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Arises
+                  <br>ER R AA IH [Z->DH] IH Z</td>
+              <td>ER R AA IH DH IH Z</td>
+              <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h3 class="title is-3" style="font-size: 1.5rem;">Real Speech</h3>
+        <p>
+          We provide samples from MultiPA and Speechocean762 here.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded container-1">
+  <div class="flex-container">
+    <div class="table-responsive pt-1">
+      <table class="table-pagination pt-1 shadow-card" id="rich-captions-1">
+          <thead>
+              <tr>
+                  <th>Audio</th>
+                  <th>Gound Truth</th>
+                  <th>Model Transcription</th>
+                  <th>Scores</th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/multipa.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Meaningful
+                  <br>M IY N IH (NG) F AH L</td>
+              <td>M IY N IY T F AH L</td>
+              <td>PER: 28.57% <br> WPER: 17.20% <br> AER: 14.59% </td>
+            </tr>
+            <tr>
+                <td><audio controls="" controlslist="nodownload" class="px-1">
+                        <source src="./static/audio/001030136_2.wav" type="audio/wav">Your browser does not support the audio element.
+                    </audio></td>
+                <td>Farmer
+                    <br>F AA (R) M ER</td>
+                <td>F AA M ER</td>
+                <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/000530145_1.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Likes
+                  <br>L [AY->AE] K S</td>
+              <td>L AE K Z</td>
+              <td>PER: 25% <br> WPER: 1.54% <br> AER: 4.32% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/000530055_1.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Mountains
+                  <br>M [AW->AA] N T AH N Z</td>
+              <td>M AA N P AH N S</td>
+              <td>PER: 28.57% <br> WPER: 8.69% <br> AER: 7.84% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/000700015_2.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Pig
+                  <br>P IH [G->K]</td>
+              <td>P IH K</td>
+              <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+            <tr>
+              <td><audio controls="" controlslist="nodownload" class="px-1">
+                      <source src="./static/audio/000700151_1.wav" type="audio/wav">Your browser does not support the audio element.
+                  </audio></td>
+              <td>Welcome
+                  <br>W [EH->IH] L K AH M</td>
+              <td>W IH L K AH M</td>
+              <td>PER: 0% <br> WPER: 0% <br> AER: 0% </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+
+
+<section class="section">
+    <div class="container is-max-desktop">
+      <!-- Pipeline. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Pipeline</h2>
+          <div class="content has-text-justified">
+            <img src="./static/images/pipeline.jpg" alt="Description of image" width="900" style="display: block; margin: 0 auto;" />
+            <p>
+              Pipeline of phoneme recognition and error detection: phonetic error of "IY" -> "EY" with a similarity score 79\% in the word "Please", and the articulatory feedback is moving the tongue towards the front of the mouth.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Pipeline. -->
+    </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link" href="https://github.com/eureka235/phonetic-error-detection" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>. You are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="text/javascript"> 
+var sc_project=12691142;  
+var sc_invisible=1;  
+var sc_security="b5064dc1";  
+</script>  
+
+</body>
+</html>
